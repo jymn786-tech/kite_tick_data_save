@@ -1,0 +1,27 @@
+name: Run Kite WebSocket
+
+on:
+  workflow_dispatch:   # allow manual trigger
+  schedule:
+    - cron: "15 3 * * 1-5"   # runs 09:15 IST (03:45 UTC), Mon-Fri
+
+jobs:
+  kite-ws:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install kiteconnect pandas
+
+      - name: Run WebSocket
+        env:
+          KITE_ACCESS_TOKEN: ${{ secrets.KITE_ACCESS_TOKEN }}
+        run: python main.py
